@@ -16,7 +16,7 @@ namespace GerarMobis
         private static readonly Dictionary<string, Furnis> fixedFurnis = new Dictionary<string, Furnis>();
         private static string actualProductdata;
         private static bool errorFinalSymbol = false;
-        private static readonly string[] arquivos = Directory.GetFiles(@"swfs\");
+        private static readonly string[] files = Directory.GetFiles(@"swfs\");
 
         private static void Main()
         {
@@ -35,7 +35,7 @@ namespace GerarMobis
             if (File.Exists("extras/items.txt"))
                 File.Delete("extras/items.txt");
 
-            if (arquivos.Length == 0)
+            if (files.Length == 0)
             {
                 Console.WriteLine("Directory <SWFs> is empty. Please insert some files (.swf) to start.");
                 readKeyExit();
@@ -102,24 +102,13 @@ namespace GerarMobis
 
                 loadingSwfs();
 
-                if (keyPressed.Key == ConsoleKey.P)
-                {
-                    generatePages(pageId, parentId, pageName);
-                    generateItems(itemsNomes, itemIdInicial, pageId, true);
-                    generateFurniture(itemsNomes, itemIdInicial, true);
-                    generateFurnidata(itemsNomes, itemIdInicial);
-                }
-                else if (keyPressed.Key == ConsoleKey.A)
-                {
-                    generatePages(pageId, parentId, pageName);
-                    generateItems(itemsNomes, itemIdInicial, pageId, false);
-                    generateFurniture(itemsNomes, itemIdInicial, false);
-                    generateFurnidata(itemsNomes, itemIdInicial);
-                }
-                else
-                    Console.WriteLine("Some error...");
+                generatePages(pageId, parentId, pageName);
+                generateItems(itemsNomes, itemIdInicial, pageId, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
+                generateFurniture(itemsNomes, itemIdInicial, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
+                generateFurnidata(itemsNomes, itemIdInicial);
 
-                File.Delete("extras/items.txt");
+                if (File.Exists("extras/items.txt"))
+                    File.Delete("extras/items.txt");
 
                 readKeyExit();
             }
@@ -372,7 +361,7 @@ namespace GerarMobis
             int currentId = 0;
             string actualFile = "";
 
-            foreach (var arquivo in arquivos)
+            foreach (var arquivo in files)
             {
                 actualFile = arquivo.Replace(".swf", "").Replace(@"swfs\", "");
                 dateStart = DateTime.Now;
