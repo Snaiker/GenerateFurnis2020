@@ -1,0 +1,13 @@
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\bin\Debug\netcoreapp3.1\GenerateFurnis.exe
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\bin\Debug\netcoreapp3.1\GenerateFurnis.deps.json
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\bin\Debug\netcoreapp3.1\GenerateFurnis.runtimeconfig.json
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\bin\Debug\netcoreapp3.1\GenerateFurnis.runtimeconfig.dev.json
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\bin\Debug\netcoreapp3.1\GenerateFurnis.dll
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\bin\Debug\netcoreapp3.1\GenerateFurnis.pdb
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\obj\Debug\netcoreapp3.1\GenerateFurnis.csprojAssemblyReference.cache
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\obj\Debug\netcoreapp3.1\GenerateFurnis.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\obj\Debug\netcoreapp3.1\GenerateFurnis.AssemblyInfoInputs.cache
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\obj\Debug\netcoreapp3.1\GenerateFurnis.AssemblyInfo.cs
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\obj\Debug\netcoreapp3.1\GenerateFurnis.dll
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\obj\Debug\netcoreapp3.1\GenerateFurnis.pdb
+C:\Users\Administrator\source\repos\GenerateFurnis\GenerateFurnis\obj\Debug\netcoreapp3.1\GenerateFurnis.genruntimeconfig.cache

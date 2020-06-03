@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateFurnis", "GenerateFurnis\GenerateFurnis.csproj", "{057D8A65-DA7D-4AA1-BF9E-C86D8FF6AA7F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{057D8A65-DA7D-4AA1-BF9E-C86D8FF6AA7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{057D8A65-DA7D-4AA1-BF9E-C86D8FF6AA7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{057D8A65-DA7D-4AA1-BF9E-C86D8FF6AA7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{057D8A65-DA7D-4AA1-BF9E-C86D8FF6AA7F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E354860-B917-41D3-9DB2-C382AE1966B2}
+	EndGlobalSection
+EndGlobal
