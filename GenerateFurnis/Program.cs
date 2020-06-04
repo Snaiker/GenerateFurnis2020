@@ -137,6 +137,7 @@ namespace GerarMobis
         private static void generateItems(List<string> itemsNomes, int itemIdInicial, int pageId, bool isPlus)
         {
             int idOriginal = itemIdInicial;
+            bool isNull = false;
 
             using (StreamWriter sw = File.CreateText(@"sqls/catalog_items.sql"))
             {
@@ -145,13 +146,14 @@ namespace GerarMobis
                     foreach (var actualItem in itemsNomes)
                     {
                         if (!tryGetInfo(actualItem, out Furnis furni))
-                            continue;
+                            isNull = true;
 
                         idOriginal++;
                         if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds) VALUES (" + idOriginal + ", " + pageId + ", " + idOriginal + ", '" + furni.publicName + "', 3, 0);");
+                            sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds) VALUES (" + idOriginal + ", " + pageId + ", " + idOriginal + ", '" + (!isNull ? furni.publicName : actualItem + " name") + "', 3, 0);");
                         else
-                            sw.WriteLine(@"INSERT INTO `catalog_items` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + pageId + "', '-1', '0', '99', '" + furni.publicName + "' ,'10', '0', '0', '1', '0', '0', '', '1', '0', 'none');");
+                            sw.WriteLine(@"INSERT INTO `catalog_items` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + pageId + "', '-1', '0', '99', '" + (!isNull ? furni.publicName : actualItem + " name") + "' ,'10', '0', '0', '1', '0', '0', '', '1', '0', 'none');");
+                            isNull = false;
                     }
                 }
 
@@ -166,6 +168,7 @@ namespace GerarMobis
         private static void generateFurniture(List<string> itemsNomes, int itemIdInicial, bool isPlus)
         {
             int idOriginal = itemIdInicial;
+            bool isNull = false;
 
             using (StreamWriter sw = File.CreateText(@"sqls/" + (isPlus ? "furniture" : "items_base") + ".sql"))
             {
@@ -174,20 +177,21 @@ namespace GerarMobis
                     foreach (var actualItem in itemsNomes)
                     {
                         if (!tryGetInfo(actualItem, out Furnis furni))
-                            continue;
+                            isNull = true;
 
                         idOriginal++;
                         if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `furniture` (`id`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`, `song_id`) VALUES (" + idOriginal + ", '" + actualItem + "', '" + furni.publicName + "', 's', 1, 1, 0, '1', '0', '0', " + idOriginal + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0', 0);");
+                            sw.WriteLine(@"INSERT INTO `furniture` (`id`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`) VALUES (" + idOriginal + ", '" + actualItem + "', '" + (!isNull ? furni.publicName : actualItem + " name") + "', 's', 1, 1, 0, '1', '0', '0', " + idOriginal + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0');");
                         else
-                            sw.WriteLine(@"INSERT INTO `items_base` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + actualItem + "', '" + furni.publicName + "', '1', '1', '0', '1', '0', '0', '0', '1', '1', '1', '1', '1', 's', 'default', '0', '0','0','0','0','0','0');");
+                            sw.WriteLine(@"INSERT INTO `items_base` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + actualItem + "', '" + (!isNull ? furni.publicName : actualItem + " name") + "', '1', '1', '0', '1', '0', '0', '0', '1', '1', '1', '1', '1', 's', 'default', '0', '0','0','0','0','0','0');");
+                        isNull = false;
                     }
                 }
 
                 sw.Close();
             }
 
-            Console.WriteLine("[SQL] -> Furniture created!\n");
+            Console.WriteLine("[SQL] -> " + (isPlus ? "Furniture" : "Items Base") + " created!\n");
         }
         #endregion
 
@@ -195,6 +199,7 @@ namespace GerarMobis
         private static void generateFurnidata(List<string> itemsNomes, int itemIdInicial)
         {
             int idOriginal = itemIdInicial;
+            bool isNull = false;
 
             using (StreamWriter sw = File.CreateText(@"sqls/furnidata.xml"))
             {
@@ -203,7 +208,7 @@ namespace GerarMobis
                     foreach (var actualItem in itemsNomes)
                     {
                         if (!tryGetInfo(actualItem, out Furnis furni))
-                            continue;
+                            isNull = true;
 
                         sw.WriteLine("<furnitype id=\"" + (++idOriginal) + "\" classname=\"" + actualItem + "\">");
                         sw.WriteLine("  <revision>0</revision>");
@@ -211,8 +216,8 @@ namespace GerarMobis
                         sw.WriteLine("  <xdim>1</xdim>");
                         sw.WriteLine("  <ydim>1</ydim>");
                         sw.WriteLine("  <partcolors />");
-                        sw.WriteLine("  <name>" + furni.publicName + "</name>");
-                        sw.WriteLine("  <description>" + furni.descName + "</description>");
+                        sw.WriteLine("  <name>" + (!isNull ? furni.publicName : actualItem + " name") + "</name>");
+                        sw.WriteLine("  <description>" + (!isNull ? furni.publicName : actualItem + " desc") + "</description>");
                         sw.WriteLine("  <adurl />");
                         sw.WriteLine("  <offerid>-1</offerid>");
                         sw.WriteLine("  <buyout>0</buyout>");
@@ -226,6 +231,7 @@ namespace GerarMobis
                         sw.WriteLine("  <cansiton>0</cansiton>");
                         sw.WriteLine("  <canlayon>0</canlayon>");
                         sw.WriteLine("</furnitype>");
+                        isNull = false;
                     }
                 }
 
