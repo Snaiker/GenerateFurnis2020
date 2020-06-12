@@ -1,0 +1,6 @@
+System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.GetResponse()
+   at System.Net.WebClient.GetWebResponse(WebRequest request)
+   at System.Net.WebClient.DownloadBits(WebRequest request, Stream writeStream)
+   at System.Net.WebClient.DownloadFile(Uri address, String fileName)
+   at GerarMobis.Program.downloadFilesURL() in C:\Users\Administrator\source\repos\GenerateFurnis2020\GenerateFurnis\Program.cs:line 445
