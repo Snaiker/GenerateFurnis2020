@@ -20,101 +20,111 @@ namespace GerarMobis
 
         private static void Main()
         {
-            Console.Title = "Furnis Generator v1.0";
-            Console.WriteLine("################################");
-            Console.WriteLine("#                              #");
-            Console.WriteLine("#        Furnis Generator v1.0 #");
-            Console.WriteLine("#                              #");
-            Console.WriteLine("#    Developed by Snaiker      #");
-            Console.WriteLine("#    Discord: Pollak#5428      #");
-            Console.WriteLine("################################\n");
-            Console.WriteLine("Welcome! Bem-vind@! Bienvenid@! :)\n");
-
-            Thread.Sleep(350);
-
-            if (File.Exists("extras/items.txt"))
-                File.Delete("extras/items.txt");
-
-            if (files.Length == 0)
-            {
-                Console.WriteLine("Directory <SWFs> is empty. Please insert some files (.swf) to start.");
-                readKeyExit();
-                return;
-            }
-
-            if (!existsProductdata())
-            {
-                if (!File.Exists("extras/productdata_" + actualProductdata + ".txt"))
-                {
-                    Console.WriteLine("Type production? (com / br / tr / es / nl / fi)");
-                    string typeProduction = Convert.ToString(Console.ReadLine());
-
-                    string newPathProduct = typeProduction.Equals("com") ? ".com" : typeProduction.Equals("br") ? ".com.br" : typeProduction.Equals("tr") ? ".com.tr" : typeProduction.Equals("es") ? ".es" : typeProduction.Equals("nl") ? ".nl" : typeProduction.Equals("fi") ? ".fi" : ".com";
-
-                    Console.WriteLine("Oops, missing the file productdata.txt! Starting download...");
-                    downloadProductdata(newPathProduct);
-                }
-            }
-
             try
             {
-                loadInfoFurnis();
+                setTitle("Furnis Generator v1.0");
+                Console.WriteLine("################################");
+                Console.WriteLine("#                              #");
+                Console.WriteLine("#        Furnis Generator v1.0 #");
+                Console.WriteLine("#                              #");
+                Console.WriteLine("#    Developed by Snaiker      #");
+                Console.WriteLine("#    Discord: Pollak#5428      #");
+                Console.WriteLine("################################\n");
+                Console.WriteLine("Welcome! Bem-vind@! Bienvenid@! :)\n");
 
-                if (errorFinalSymbol)
-                {
-                    readKeyExit();
-                    return;
-                }
-
-                Console.WriteLine("--");
-
-                Console.Write("\nInitial Item ID: ");
-                string item = Convert.ToString(Console.ReadLine());
-                if (!int.TryParse(item, out int itemIdInicial))
-                {
-                    readKeyExit();
-                    return;
-                }
-
-                int idOriginal = itemIdInicial;
-
-                Console.Write("\nPage ID: ");
-                if (!int.TryParse(Convert.ToString(Console.ReadLine()), out int pageId))
-                {
-                    readKeyExit();
-                    return;
-                }
-
-                Console.Write("\nParent ID: ");
-                if (!int.TryParse(Convert.ToString(Console.ReadLine()), out int parentId))
-                {
-                    readKeyExit();
-                    return;
-                }
-
-                Console.Write("\nCaption page: ");
-                string pageName = Console.ReadLine();
-
-                Console.Write("\nType emulator? Press the key... PLUS [P] or Arcturus [A]: ");
-                ConsoleKeyInfo keyPressed = Console.ReadKey();
-
-                Console.WriteLine("\n");
-
-                loadingSwfs();
-
-                generatePages(pageId, parentId, pageName);
-                generateItems(itemsNomes, itemIdInicial, pageId, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
-                generateFurniture(itemsNomes, itemIdInicial, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
-                generateFurnidata(itemsNomes, itemIdInicial);
+                Thread.Sleep(250);
 
                 if (File.Exists("extras/items.txt"))
                     File.Delete("extras/items.txt");
 
-                readKeyExit();
+                if (files.Length == 0)
+                {
+                    Console.WriteLine("Directory <SWFs> is empty. Please insert some files (.swf) to start.");
+                    readKeyExit();
+                    return;
+                }
+
+                if (!existsProductdata())
+                {
+                    if (!File.Exists("extras/productdata_" + actualProductdata + ".txt"))
+                    {
+                        Console.WriteLine("Type production? (com / br / tr / es / nl / fi)");
+                        string typeProduction = Convert.ToString(Console.ReadLine());
+
+                        string newPathProduct = typeProduction.Equals("com") ? ".com" : typeProduction.Equals("br") ? ".com.br" : typeProduction.Equals("tr") ? ".com.tr" : typeProduction.Equals("es") ? ".es" : typeProduction.Equals("nl") ? ".nl" : typeProduction.Equals("fi") ? ".fi" : ".com";
+
+                        Console.WriteLine("Oops, missing the file productdata.txt! Starting download...");
+                        downloadProductdata(newPathProduct);
+                    }
+                }
+
+                try
+                {
+                    loadInfoFurnis();
+
+                    if (errorFinalSymbol)
+                    {
+                        readKeyExit();
+                        return;
+                    }
+
+                    Console.WriteLine("--");
+
+                    Console.Write("\nInitial Item ID: ");
+                    string item = Convert.ToString(Console.ReadLine());
+                    if (!int.TryParse(item, out int itemIdInicial))
+                    {
+                        readKeyExit();
+                        return;
+                    }
+
+                    int idOriginal = itemIdInicial;
+
+                    Console.Write("\nPage ID: ");
+                    if (!int.TryParse(Convert.ToString(Console.ReadLine()), out int pageId))
+                    {
+                        readKeyExit();
+                        return;
+                    }
+
+                    Console.Write("\nParent ID: ");
+                    if (!int.TryParse(Convert.ToString(Console.ReadLine()), out int parentId))
+                    {
+                        readKeyExit();
+                        return;
+                    }
+
+                    Console.Write("\nCaption page: ");
+                    string pageName = Console.ReadLine();
+
+                    Console.Write("\nFurniline ");
+                    string furniline = Console.ReadLine();
+
+                    Console.Write("\nType emulator? Press the key... PLUS [P] or Arcturus [A]: ");
+                    ConsoleKeyInfo keyPressed = Console.ReadKey();
+
+                    Console.WriteLine("\n");
+
+                    loadingSwfs();
+
+                    generatePages(pageId, parentId, pageName);
+                    generateItems(itemsNomes, itemIdInicial, pageId, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
+                    generateFurniture(itemsNomes, itemIdInicial, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true, furniline);
+                    generateFurnidata(itemsNomes, itemIdInicial);
+
+                    /*if (File.Exists("extras/items.txt"))
+                        File.Delete("extras/items.txt");*/
+
+                    readKeyExit();
+                }
+                catch (Exception e)
+                {
+                    insertErrors(e);
+                }
             }
-            catch (Exception e)
+            catch
             {
-                insertErrors(e);
+                readKeyExit();
             }
         }
 
@@ -153,7 +163,7 @@ namespace GerarMobis
                             sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds) VALUES (" + idOriginal + ", " + pageId + ", " + idOriginal + ", '" + (!isNull ? furni.publicName : actualItem + " name") + "', 3, 0);");
                         else
                             sw.WriteLine(@"INSERT INTO `catalog_items` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + pageId + "', '-1', '0', '99', '" + (!isNull ? furni.publicName : actualItem + " name") + "' ,'10', '0', '0', '1', '0', '0', '', '1', '0', 'none');");
-                            isNull = false;
+                        isNull = false;
                     }
                 }
 
@@ -165,7 +175,7 @@ namespace GerarMobis
         #endregion
 
         #region Furniture
-        private static void generateFurniture(List<string> itemsNomes, int itemIdInicial, bool isPlus)
+        private static void generateFurniture(List<string> itemsNomes, int itemIdInicial, bool isPlus, string furniline)
         {
             int idOriginal = itemIdInicial;
             bool isNull = false;
@@ -181,7 +191,7 @@ namespace GerarMobis
 
                         idOriginal++;
                         if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `furniture` (`id`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`) VALUES (" + idOriginal + ", '" + actualItem + "', '" + (!isNull ? furni.publicName : actualItem + " name") + "', 's', 1, 1, 0, '1', '0', '0', " + idOriginal + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0');");
+                            sw.WriteLine(@"INSERT INTO `furniture` (`id`, `furniline`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`) VALUES (" + idOriginal + ", '" + furniline + "', '" + actualItem + "', '" + (!isNull ? furni.publicName : actualItem + " name") + "', 's', 1, 1, 0, '1', '0', '0', " + idOriginal + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0');");
                         else
                             sw.WriteLine(@"INSERT INTO `items_base` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + actualItem + "', '" + (!isNull ? furni.publicName : actualItem + " name") + "', '1', '1', '0', '1', '0', '0', '0', '1', '1', '1', '1', '1', 's', 'default', '0', '0','0','0','0','0','0');");
                         isNull = false;
@@ -394,11 +404,15 @@ namespace GerarMobis
         #endregion
 
         #region Read key error
-        static void readKeyExit()
+        private static void readKeyExit()
         {
             Console.WriteLine("\nPress any key to exit...");
             Console.ReadKey();
         }
+        #endregion
+
+        #region Set Title Console
+        private static void setTitle(string message) => Console.Title = message;
         #endregion
     }
 }
