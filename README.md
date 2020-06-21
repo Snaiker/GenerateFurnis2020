@@ -1,2 +1,4 @@
-# GenerateFurnis2020
-All credits Snaiker(Pollak)
+# Generate Furnis
+This is a generator of Furnis to Habbo.
+# Credits:
+Snaiker (Pollak)
