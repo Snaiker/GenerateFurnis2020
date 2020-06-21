@@ -16,7 +16,6 @@ namespace GerarMobis
         private static readonly Dictionary<string, Furnis> fixedFurnis = new Dictionary<string, Furnis>();
         private static string actualProductdata;
         private static bool errorFinalSymbol = false;
-        //private static bool tryDownloadSWFs = false;
         private static readonly string[] files = Directory.GetFiles(@"swfs\");
 
         private static void Main()
@@ -40,34 +39,9 @@ namespace GerarMobis
 
                 if (files.Length == 0)
                 {
-                    Console.WriteLine("Directory <SWFs> is empty. Please insert some files (.swf) to start.\n\n     Or write press the Key ' Y ' to start other process.");
+                    Console.WriteLine("Directory <SWFs> is empty. Please insert some files (.swf) to start.");
                     readKeyExit();
                     return;
-
-                    /*ConsoleKeyInfo keyP = Console.ReadKey();
-                    if (keyP.Key != ConsoleKey.Y)
-                    {
-                        readKeyExit();
-                        return;
-                    }
-
-                    if (!existsProductdata())
-                    {
-                        if (!File.Exists("extras/productdata_" + actualProductdata + ".txt"))
-                        {
-                            Console.WriteLine("Type production? (com / br / tr / es / nl / fi / de)");
-                            string typeProduction = Convert.ToString(Console.ReadLine());
-
-                            string newPathProduct = typeProduction.Equals("com") ? ".com" : typeProduction.Equals("br") ? ".com.br" : typeProduction.Equals("tr") ? ".com.tr" : typeProduction.Equals("es") ? ".es" : typeProduction.Equals("nl") ? ".nl" : typeProduction.Equals("fi") ? ".fi" : typeProduction.Equals("de") ? ".de" : ".com";
-
-                            Console.WriteLine("Oops, missing the file productdata.txt! Starting download...");
-                            downloadProductdata(newPathProduct);
-                        }
-                    }
-
-                    Console.Clear();
-
-                    downloadFilesURL();*/
                 }
 
                 if (!existsProductdata())
@@ -416,74 +390,6 @@ namespace GerarMobis
         }
         #endregion
 
-        #region Download files from URL
-        /*private static void downloadFilesURL()
-        {
-            existsProductdata();
-            loadInfoFurnis();
-
-            WebClient webClient = new WebClient();
-            int i = 0;
-            foreach (var file in fixedFurnis)
-            {
-                try
-                {
-                    if (file.Key.Contains("c20") || file.Key.Contains("r20"))
-                    {
-                        Console.WriteLine("[" + (++i) + "] Trying download file <" + file.Key + "> ...");
-
-                        var url = "https://images.habblive.net/dcr/hof_furni_a/" + file.Key + ".swf";
-                        //var url = "https://images.habbo.com/dcr/hof_furni/" + folderID + "/" + file.Key + ".swf";
-
-                        /*var task = urlExists(url);
-                        task.Wait();
-                        if (!task.Result)
-                            continue;
-
-                        webClient.Headers.Add("User-Agent: Other");
-                        webClient.DownloadFile(new Uri(url), Environment.CurrentDirectory + "/teste/" + file.Key + ".swf");
-                    }
-                }
-                catch (WebException ex)
-                {
-                    insertErrors(ex);
-                    continue;
-                }
-            }
-
-            Console.WriteLine("Download completed!");
-        }*/
-        #endregion
-
-        /*private static async Task<bool> urlExists(string url)
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                var restponse = await client.GetAsync(url);
-
-                return restponse.StatusCode == System.Net.HttpStatusCode.OK;
-            }
-
-            /*bool result = true;
-
-            WebRequest webRequest = WebRequest.Create(url);
-            //webRequest.Timeout = 1200; // miliseconds
-            webRequest.Method = "HEAD";
-
-            try
-            {
-                webRequest.GetResponse();
-            }
-            catch
-            {
-                result = false;
-            }
-
-            return result;
-        }*/
-
-        #endregion
-
         #region Logs errors
         private static void insertErrors(Exception e)
         {
@@ -502,6 +408,8 @@ namespace GerarMobis
 
         #region Set Title Console
         private static void setTitle(string message) => Console.Title = message;
+        #endregion
+
         #endregion
     }
 }

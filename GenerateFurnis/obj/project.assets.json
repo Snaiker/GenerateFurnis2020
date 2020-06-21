@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\source\\repos\\GenerateFurnis2020\\GenerateFurnis\\GenerateFurnis.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Documents\\GitHub\\GenerateFurnis2020\\GenerateFurnis\\GenerateFurnis.csproj",
       "projectName": "GenerateFurnis",
-      "projectPath": "C:\\Users\\Administrator\\source\\repos\\GenerateFurnis2020\\GenerateFurnis\\GenerateFurnis.csproj",
+      "projectPath": "C:\\Users\\Administrator\\Documents\\GitHub\\GenerateFurnis2020\\GenerateFurnis\\GenerateFurnis.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Administrator\\source\\repos\\GenerateFurnis2020\\GenerateFurnis\\obj\\",
+      "outputPath": "C:\\Users\\Administrator\\Documents\\GitHub\\GenerateFurnis2020\\GenerateFurnis\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -58,7 +58,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
       }
     }
   }
