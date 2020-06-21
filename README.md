@@ -1,4 +1,4 @@
 # Generate Furnis
-This is a Geneator of Furnis to Habbo.
+This is a generator of Furnis to Habbo.
 # Credits:
 Snaiker (Pollak)
