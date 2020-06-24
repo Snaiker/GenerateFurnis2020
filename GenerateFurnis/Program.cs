@@ -97,8 +97,8 @@ namespace GerarMobis
                     Console.Write("\nCaption page: ");
                     string pageName = Console.ReadLine();
 
-                    Console.Write("\nFurniline ");
-                    string furniline = Console.ReadLine();
+                    /*Console.Write("\nFurniline ");
+                    string furniline = Console.ReadLine();*/
 
                     Console.Write("\nType emulator? Press the key... PLUS [P] or Arcturus [A]: ");
                     ConsoleKeyInfo keyPressed = Console.ReadKey();
@@ -109,7 +109,7 @@ namespace GerarMobis
 
                     generatePages(pageId, parentId, pageName);
                     generateItems(itemsNomes, itemIdInicial, pageId, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
-                    generateFurniture(itemsNomes, itemIdInicial, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true, furniline);
+                    generateFurniture(itemsNomes, itemIdInicial, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true, "");
                     generateFurnidata(itemsNomes, itemIdInicial);
 
                     readKeyExit();

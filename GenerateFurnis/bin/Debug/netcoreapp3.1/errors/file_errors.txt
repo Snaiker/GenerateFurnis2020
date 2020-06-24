@@ -1,0 +1,9 @@
+System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\Users\Administrator\Documents\GitHub\GenerateFurnis2020\GenerateFurnis\bin\Debug\netcoreapp3.1\sqls\catalog_pages.sql'.
+   at System.IO.FileStream.ValidateFileHandle(SafeFileHandle fileHandle)
+   at System.IO.FileStream.CreateFileOpenHandle(FileMode mode, FileShare share, FileOptions options)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options)
+   at System.IO.StreamWriter.ValidateArgsAndOpenPath(String path, Boolean append, Encoding encoding, Int32 bufferSize)
+   at System.IO.StreamWriter..ctor(String path, Boolean append)
+   at System.IO.File.CreateText(String path)
+   at GerarMobis.Program.generatePages(Int32 pageId, Int32 parentId, String pageName) in C:\Users\Administrator\Documents\GitHub\GenerateFurnis2020\GenerateFurnis\Program.cs:line 133
+   at GerarMobis.Program.Main() in C:\Users\Administrator\Documents\GitHub\GenerateFurnis2020\GenerateFurnis\Program.cs:line 110
