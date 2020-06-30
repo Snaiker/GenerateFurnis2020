@@ -12,7 +12,7 @@ namespace GerarMobis
 {
     class Program
     {
-        private static readonly List<string> itemsNomes = new List<string>();
+        private static readonly List<string> itemsNames = new List<string>();
         private static readonly Dictionary<string, Furnis> fixedFurnis = new Dictionary<string, Furnis>();
         private static string actualProductdata;
         private static bool errorFinalSymbol = false;
@@ -44,18 +44,15 @@ namespace GerarMobis
                     return;
                 }
 
-                if (!existsProductdata())
+                if (!File.Exists("extras/productdata_" + actualProductdata + ".txt") && !existsProductdata())
                 {
-                    if (!File.Exists("extras/productdata_" + actualProductdata + ".txt"))
-                    {
-                        Console.WriteLine("Type production? (com / br / tr / es / nl / fi / de)");
-                        string typeProduction = Convert.ToString(Console.ReadLine());
+                    Console.WriteLine("Type production? (com / br / tr / es / nl / fi / de)");
+                    string typeProduction = Convert.ToString(Console.ReadLine());
 
-                        string newPathProduct = typeProduction.Equals("com") ? ".com" : typeProduction.Equals("br") ? ".com.br" : typeProduction.Equals("tr") ? ".com.tr" : typeProduction.Equals("es") ? ".es" : typeProduction.Equals("nl") ? ".nl" : typeProduction.Equals("fi") ? ".fi" : typeProduction.Equals("de") ? ".de" : ".com";
+                    string newPathProduct = typeProduction.Equals("com") ? ".com" : typeProduction.Equals("br") ? ".com.br" : typeProduction.Equals("tr") ? ".com.tr" : typeProduction.Equals("es") ? ".es" : typeProduction.Equals("nl") ? ".nl" : typeProduction.Equals("fi") ? ".fi" : typeProduction.Equals("de") ? ".de" : ".com";
 
-                        Console.WriteLine("Oops, missing the file productdata.txt! Starting download...");
-                        downloadProductdata(newPathProduct);
-                    }
+                    Console.WriteLine("Oops, missing the file productdata.txt! Starting download...");
+                    downloadProductdata(newPathProduct);
                 }
 
                 try
@@ -107,10 +104,10 @@ namespace GerarMobis
 
                     loadingSwfs();
 
-                    generatePages(pageId, parentId, pageName);
-                    generateItems(itemsNomes, itemIdInicial, pageId, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
-                    generateFurniture(itemsNomes, itemIdInicial, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true, "");
-                    generateFurnidata(itemsNomes, itemIdInicial);
+                    generatePage(pageId, parentId, pageName);
+                    generateItems(itemIdInicial, pageId, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true);
+                    generateFurniture(itemIdInicial, keyPressed.Key == ConsoleKey.P ? true : keyPressed.Key == ConsoleKey.A ? false : true, "");
+                    generateFurnidata(itemIdInicial);
 
                     readKeyExit();
                 }
@@ -128,8 +125,9 @@ namespace GerarMobis
         #region Generate files
 
         #region Pages
-        private static void generatePages(int pageId, int parentId, string pageName)
+        private static void generatePage(int pageId, int parentId, string pageName)
         {
+            setTitle("Generate SQL - Catalog Pages");
             using (StreamWriter sw = File.CreateText(@"sqls/catalog_pages.sql"))
             {
                 sw.WriteLine(@"INSERT INTO `catalog_pages` (`id`,`parent_id`, `caption`, `icon_image`, `min_rank`, `order_num`) VALUES (" + pageId + ", " + parentId + ", '" + pageName + "' , 13, 1, '0');");
@@ -141,16 +139,17 @@ namespace GerarMobis
         #endregion
 
         #region Items
-        private static void generateItems(List<string> itemsNomes, int itemIdInicial, int pageId, bool isPlus)
+        private static void generateItems(int itemIdInicial, int pageId, bool isPlus)
         {
+            setTitle("Generate SQL - Catalog Items");
             int idOriginal = itemIdInicial;
             bool isNull = false;
 
             using (StreamWriter sw = File.CreateText(@"sqls/catalog_items.sql"))
             {
-                if (itemsNomes.Count > 0)
+                if (itemsNames.Count > 0)
                 {
-                    foreach (var actualItem in itemsNomes)
+                    foreach (var actualItem in itemsNames)
                     {
                         if (!tryGetInfo(actualItem, out Furnis furni))
                             isNull = true;
@@ -172,16 +171,19 @@ namespace GerarMobis
         #endregion
 
         #region Furniture
-        private static void generateFurniture(List<string> itemsNomes, int itemIdInicial, bool isPlus, string furniline)
+        private static void generateFurniture(int itemIdInicial, bool isPlus, string furniline)
         {
             int idOriginal = itemIdInicial;
             bool isNull = false;
+            string typeEmu = isPlus ? "furniture" : "items_base";
 
-            using (StreamWriter sw = File.CreateText(@"sqls/" + (isPlus ? "furniture" : "items_base") + ".sql"))
+            setTitle("Genereate SQL - " + typeEmu);
+
+            using (StreamWriter sw = File.CreateText(@"sqls/" + typeEmu + ".sql"))
             {
-                if (itemsNomes.Count > 0)
+                if (itemsNames.Count > 0)
                 {
-                    foreach (var actualItem in itemsNomes)
+                    foreach (var actualItem in itemsNames)
                     {
                         if (!tryGetInfo(actualItem, out Furnis furni))
                             isNull = true;
@@ -198,21 +200,23 @@ namespace GerarMobis
                 sw.Close();
             }
 
-            Console.WriteLine("[SQL] -> " + (isPlus ? "Furniture" : "Items Base") + " created!\n");
+            Console.WriteLine("[SQL] -> " + typeEmu + " created!\n");
         }
         #endregion
 
         #region Furnidata
-        private static void generateFurnidata(List<string> itemsNomes, int itemIdInicial)
+        private static void generateFurnidata(int itemIdInicial)
         {
             int idOriginal = itemIdInicial;
             bool isNull = false;
 
+            setTitle("Genereate SQL - Furnidata");
+
             using (StreamWriter sw = File.CreateText(@"sqls/furnidata.xml"))
             {
-                if (itemsNomes.Count > 0)
+                if (itemsNames.Count > 0)
                 {
-                    foreach (var actualItem in itemsNomes)
+                    foreach (var actualItem in itemsNames)
                     {
                         if (!tryGetInfo(actualItem, out Furnis furni))
                             isNull = true;
@@ -224,7 +228,7 @@ namespace GerarMobis
                         sw.WriteLine("  <ydim>1</ydim>");
                         sw.WriteLine("  <partcolors />");
                         sw.WriteLine("  <name>" + (!isNull ? furni.publicName : actualItem + " name") + "</name>");
-                        sw.WriteLine("  <description>" + (!isNull ? furni.publicName : actualItem + " desc") + "</description>");
+                        sw.WriteLine("  <description>" + (!isNull ? furni.publicName + " desc" : actualItem + " desc") + "</description>");
                         sw.WriteLine("  <adurl />");
                         sw.WriteLine("  <offerid>-1</offerid>");
                         sw.WriteLine("  <buyout>0</buyout>");
@@ -254,6 +258,8 @@ namespace GerarMobis
         {
             if (File.Exists("extras/items.txt"))
                 return;
+
+            setTitle("Add items to text file...");
 
             string getText = File.ReadAllText(path);
             getText = Regex.Replace(getText, @"\t|\n|\r", string.Empty).Replace("]][[", "],[");
@@ -290,6 +296,7 @@ namespace GerarMobis
         #region Load info Furnis
         private static void loadInfoFurnis()
         {
+            setTitle("Load info furnis...");
             if (!File.Exists("extras/items.txt"))
             {
                 addItemsText("extras/productdata_" + actualProductdata + ".txt");
@@ -329,6 +336,7 @@ namespace GerarMobis
         #region Download Productdata
         private static void downloadProductdata(string path)
         {
+            setTitle("Download productdata...");
             WebClient webClient = new WebClient();
 
             webClient.Headers.Add("User-Agent: Other");
@@ -372,19 +380,19 @@ namespace GerarMobis
             TimeSpan date;
 
             int currentId = 0;
-            string actualFile = "";
+            string actualFile = string.Empty;
 
             foreach (var arquivo in files)
             {
                 actualFile = arquivo.Replace(".swf", "").Replace(@"swfs\", "");
                 dateStart = DateTime.Now;
 
-                if (itemsNomes.Contains(actualFile))
+                if (itemsNames.Contains(actualFile))
                     continue;
 
                 date = DateTime.Now - dateStart;
 
-                itemsNomes.Add(actualFile);
+                itemsNames.Add(actualFile);
                 Console.WriteLine("[" + (++currentId) + "] Loading swf name <" + actualFile + "> -> " + date.Seconds + " s, " + date.Milliseconds + " ms");
             }
         }
@@ -407,7 +415,7 @@ namespace GerarMobis
         #endregion
 
         #region Set Title Console
-        private static void setTitle(string message) => Console.Title = message;
+        private static void setTitle(string title) => Console.Title = title;
         #endregion
 
         #endregion
