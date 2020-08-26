@@ -160,7 +160,7 @@ namespace GerarMobis
 
                         idOriginal++;
                         if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds) VALUES (" + idOriginal + ", " + pageId + ", " + idOriginal + ", '" + (!notExists ? furni.publicName : actualItem + " name") + "', 3, 0);");
+                            sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds, offer_id) VALUES (" + idOriginal + ", " + pageId + ", " + idOriginal + ", '" + (!notExists ? furni.publicName : actualItem + " name") + "', 3, 0, " + idOriginal + ");");
                         else
                             sw.WriteLine(@"INSERT INTO `catalog_items` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + pageId + "', '-1', '0', '99', '" + (!notExists ? furni.publicName : actualItem + " name") + "' ,'10', '0', '0', '1', '0', '0', '', '1', '0', 'none');");
                         notExists = false;
@@ -207,7 +207,7 @@ namespace GerarMobis
             }
 
             typeEmu = char.ToUpper(typeEmu[0]) + typeEmu.Substring(1);
-            writeLine("[SQL] -> " + typeEmu + " created!", ConsoleColor.Green);
+            writeLine("[SQL] -> " + typeEmu.Replace('_', ' ') + " created!", ConsoleColor.Green);
         }
         #endregion
 
@@ -304,9 +304,12 @@ namespace GerarMobis
             setTitle("Download productdata...");
             WebClient webClient = new WebClient();
 
+            path = path.Replace(".com.br", "br").Replace(".com.tr", "tr").Replace(".", string.Empty).Replace(".de", "de");
+
             webClient.Headers.Add("User-Agent: Other");
-            webClient.DownloadFile(new Uri("https://www.habbo" + path + "/gamedata/productdata/68a94a97ea90183f76a6950e5b360211450aa904"), Environment.CurrentDirectory + "/extras/productdata_" + path.Replace(".com.br", "br").Replace(".com.tr", "tr").Replace(".", string.Empty).Replace(".de", "de") + ".txt");
+            webClient.DownloadFile(new Uri("https://www.habbo" + path + "/gamedata/productdata/68a94a97ea90183f76a6950e5b360211450aa904"), Environment.CurrentDirectory + "/extras/productdata_" + path + ".txt");
             writeLine("Download completed!\n", ConsoleColor.Green);
+            actualProductdata = path;
         }
         #endregion
 
