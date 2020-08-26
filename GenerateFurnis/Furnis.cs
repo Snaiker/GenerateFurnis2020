@@ -8,11 +8,11 @@
 
         public string descName { get; set; }
 
-        public Furnis(string cN, string pN, string dN)
+        public Furnis(string className, string publicName, string descName)
         {
-            this.className = cN;
-            this.publicName = pN;
-            this.descName = dN;
+            this.className = className;
+            this.publicName = publicName;
+            this.descName = descName;
         }
     }
 }

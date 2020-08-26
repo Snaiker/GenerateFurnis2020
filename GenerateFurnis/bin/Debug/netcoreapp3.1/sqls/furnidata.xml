@@ -1,13 +1,34 @@
-<furnitype id="2" classname="darkelegant_c20_cat">
+<furnitype id="2" classname="darkmodern_c20_bed">
   <revision>0</revision>
   <defaultdir>0</defaultdir>
   <xdim>1</xdim>
   <ydim>1</ydim>
   <partcolors />
-  <name>Dark Elegant Cat</name>
-  <description>Dark Elegant Cat desc</description>
+  <name>Cama Loft Urbano</name>
+  <description>darkmodern_c20_bed desc</description>
   <adurl />
-  <offerid>-1</offerid>
+  <offerid>2</offerid>
+  <buyout>0</buyout>
+  <rentofferid>-1</rentofferid>
+  <rentbuyout>0</rentbuyout>
+  <bc>0</bc>
+  <excludeddynamic>0</excludeddynamic>
+  <customparams>0</customparams>
+  <specialtype>1</specialtype>
+  <canstandon>0</canstandon>
+  <cansiton>0</cansiton>
+  <canlayon>0</canlayon>
+</furnitype>
+<furnitype id="3" classname="darkmodern_c20_bunnylight">
+  <revision>0</revision>
+  <defaultdir>0</defaultdir>
+  <xdim>1</xdim>
+  <ydim>1</ydim>
+  <partcolors />
+  <name>Abajour Coelhinho</name>
+  <description>darkmodern_c20_bunnylight desc</description>
+  <adurl />
+  <offerid>3</offerid>
   <buyout>0</buyout>
   <rentofferid>-1</rentofferid>
   <rentbuyout>0</rentbuyout>
