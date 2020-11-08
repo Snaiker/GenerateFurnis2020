@@ -260,6 +260,28 @@ namespace GerarMobis
         }
         #endregion
 
+        #region Productdata
+        private static void generateProductdata()
+        {
+            bool notExists = false;
+
+            setTitle("Genereate SQL - Furnidata");
+
+            if (newFurnis.Count > 0)
+                using (StreamWriter sw = File.CreateText(@"sqls/productdata.txt"))
+                {
+                    foreach (var actualItem in newFurnis)
+                    {
+                        if (!tryGetInfo(actualItem, out Furnis furni))
+                            notExists = true;
+
+                        sw.WriteLine("[\"" + actualItem + "", !notExists ? furni.publicName : actualItem, !notExists ? furni.descName : actualItem + " desc" + "]");
+                        notExists = true;
+                    }
+                }
+        }
+        #endregion
+
         #region Add Items Text
         private static void readProductda(string path)
         {
