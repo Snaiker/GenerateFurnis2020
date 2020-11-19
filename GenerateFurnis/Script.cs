@@ -38,11 +38,11 @@ namespace GerarMobis
                 setTitle("Furnis Generator v2");
                 writeLine("################################", ConsoleColor.Blue);
                 writeLine("#                              #", ConsoleColor.White);
-                writeLine("#    Furnis Generator v2       #", ConsoleColor.Blue);
+                writeLine("#   Furnis Generator v2.1      #", ConsoleColor.Blue);
                 writeLine("#                              #", ConsoleColor.White);
-                writeLine("#    Developed by Snaiker      #", ConsoleColor.Blue);
+                writeLine("#   Developed by Snaiker       #", ConsoleColor.Blue);
                 writeLine("#                              #", ConsoleColor.White);
-                writeLine("#    Discord: Pollak#5428      #", ConsoleColor.Blue);
+                writeLine("#   Discord: Pollak#5428       #", ConsoleColor.Blue);
                 writeLine("#                              #", ConsoleColor.White);
                 writeLine("################################\n", ConsoleColor.Blue);
                 writeLine("Welcome! Bem-vind@! Bienvenid@! :)\n", ConsoleColor.White);
@@ -107,9 +107,11 @@ namespace GerarMobis
 
                     loadingSwfs();
 
-                    generatePage(pageId, parentId, pageName);
-                    generateItems(itemIdInicial, pageId, typeEmulator.Equals("plus", StringComparison.CurrentCultureIgnoreCase) ? true : typeEmulator.Equals("arcturus", StringComparison.CurrentCultureIgnoreCase) ? false : true);
-                    generateFurniture(itemIdInicial, typeEmulator.Equals("plus", StringComparison.CurrentCultureIgnoreCase) ? true : typeEmulator.Equals("arcturus", StringComparison.CurrentCultureIgnoreCase) ? false : true);
+                    bool typeEmu = typeEmulator.Equals("plus", StringComparison.CurrentCultureIgnoreCase);
+
+                    generatePage(pageId, parentId, pageName, typeEmu);
+                    generateItems(itemIdInicial, pageId, typeEmu);
+                    generateFurniture(itemIdInicial, typeEmu);
                     generateFurnidata(itemIdInicial);
                 }
                 catch (Exception e)
@@ -126,13 +128,15 @@ namespace GerarMobis
         #region Generate files
 
         #region Pages
-        private static void generatePage(int pageId, int parentId, string pageName)
+        private static void generatePage(int pageId, int parentId, string pageName, bool isPlus)
         {
             setTitle("Generate SQL - Catalog Pages");
             using (StreamWriter sw = File.CreateText(@"sqls/catalog_pages.sql"))
             {
-                //sw.WriteLine(@"INSERT INTO `catalog_pages` (`id`, `parent_id`, `type`, `caption`, `icon_image`, `visible`, `enabled`,`min_rank`, `order_num`, `page_name`, `page_headline`, `page_teaser`, `page_special`, `page_text1`, `page_text2`, `page_text_details`, `page_text_teaser`, `page_layout`) VALUES(" + pageId + ", " + parentId + ", 'DEFAULT', '" + pageName + "', 999996, '1', '1', 1, 0, '', '', '', '', '', '', '', '', 'default_3x3');");
-                sw.WriteLine(@"INSERT INTO `catalog_pages` (`id`,`parent_id`, `caption`, `icon_image`, `min_rank`, `order_num`) VALUES (" + pageId + ", " + parentId + ", '" + pageName + "' , 13, 1, '0');");
+                if (isPlus)
+                    sw.WriteLine(@"INSERT INTO `catalog_pages` (`id`,`parent_id`, `caption`, `icon_image`, `min_rank`, `order_num`) VALUES (" + pageId + ", " + parentId + ", '" + pageName + "' , 13, 1, '0');");
+                else
+                    sw.WriteLine(@"INSERT INTO `catalog_pages` (`id`, `parent_id`, `caption_save`, `caption`, `page_layout`, `icon_color`, `icon_image`, `min_rank`, `order_num`, `visible`, `enabled`, `club_only`, `vip_only`, `page_headline`, `page_teaser`, `page_special`, `page_text1`, `page_text2`, `page_text_details`, `page_text_teaser`, `room_id`, `includes`) VALUES (" + pageId + ", " + parentId + ", '" + pageName.ToLower().Replace(' ', '_') + "', '" + pageName + "', 'default_3x3', 1, 1, 1, 1, '1', '1', '0', '0', '', '', '', '', '', '', '', 0, '');");
                 sw.Close();
             }
 
@@ -143,14 +147,10 @@ namespace GerarMobis
         #region Items
         private static void generateItems(int itemIdInicial, int pageId, bool isPlus)
         {
-            //sw.WriteLine(@"INSERT INTO `catalog_items` (`id`, `page_id`, `item_ids`, `catalog_name`, `offer_active`,`cost_credits`, `cost_duckets`, `cost_diamonds`, `cost_moneyspecial`, `amount`, `club_level`, `extra_info`,`limited_sells`, `future_ltds`, `allow_gift`, `offer_id`, `order_number`, `predesigned_id`) VALUES(" + idOriginal + ", " + pageId + ", '" + idOriginal + "', '" + (!notExists ? furni.publicName : actualItem + " name") + "', '0', 3, 0, 0, 0, 1, 0, '', 0, '0', '1', -1, 0, '0');");
-
             setTitle("Generate SQL - Catalog Items");
-            int idOriginal = itemIdInicial;
             bool notExists = false;
 
             if (newFurnis.Count > 0)
-            {
                 using (StreamWriter sw = File.CreateText(@"sqls/catalog_items.sql"))
                 {
                     foreach (var actualItem in newFurnis)
@@ -158,35 +158,30 @@ namespace GerarMobis
                         if (!tryGetInfo(actualItem, out Furnis furni))
                             notExists = true;
 
-                        idOriginal++;
+                        itemIdInicial++;
                         if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds, offer_id) VALUES (" + idOriginal + ", " + pageId + ", " + idOriginal + ", '" + (!notExists ? furni.publicName : actualItem + " name") + "', 3, 0, " + idOriginal + ");");
+                            sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds, offer_id) VALUES (" + itemIdInicial + ", " + pageId + ", " + itemIdInicial + ", '" + (!notExists ? furni.publicName : actualItem + " name") + "', 3, 0, " + itemIdInicial + ");");
                         else
-                            sw.WriteLine(@"INSERT INTO `catalog_items` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + pageId + "', '-1', '0', '99', '" + (!notExists ? furni.publicName : actualItem + " name") + "' ,'10', '0', '0', '1', '0', '0', '', '1', '0', 'none');");
+                            sw.WriteLine(@"INSERT INTO `catalog_items` (`id`, `item_ids`, `page_id`, `catalog_name`, `cost_credits`, `cost_points`, `points_type`, `amount`, `limited_stack`, `limited_sells`, `order_number`, `offer_id`, `song_id`, `extradata`, `have_offer`, `club_only`) VALUES (" + itemIdInicial + ", '" + itemIdInicial + "', " + pageId + ", '" + actualItem + "', 3, 0, 0, 1, 0, 0, 1, " + itemIdInicial + ", 0, '', '1', '0');");
                         notExists = false;
                     }
 
                     sw.Close();
                 }
 
-                writeLine("[SQL] -> Catalog Items created!", ConsoleColor.Green);
-            }
+            writeLine("[SQL] -> Catalog Items created!", ConsoleColor.Green);
         }
         #endregion
 
         #region Furniture
-        private static void generateFurniture(int itemIdInicial, bool isPlus, string furniline = "")
+        private static void generateFurniture(int itemIdInicial, bool isPlus)
         {
-            //sw.WriteLine(@"INSERT INTO `items_base` (`item_id`, `sprite_id`, `item_name`, `type`, `width`, `length`, `height`,`allow_stack`, `allow_walk`, `allow_sit`, `allow_lay`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`,`allow_inventory_stack`, `allow_rotation`, `interaction_type`, `cycle_count`, `vending_ids`, `maxLtdItems`, `multi_height`,`effectid`, `effect_type`) VALUES(" + idOriginal + ", " + idOriginal + ", '" + actualItem + "', 's', 1, 1, 0.00, 1, 0, 0, 0, 0, 1, 1, 1, 0, 'default', 1, '0', 0, '', 0, 'DEFAULT');");
-
-            int idOriginal = itemIdInicial;
             bool notExists = false;
             string typeEmu = isPlus ? "furniture" : "items_base";
 
             setTitle("Generate SQL - " + typeEmu);
 
             if (newFurnis.Count > 0)
-            {
                 using (StreamWriter sw = File.CreateText(@"sqls/" + typeEmu + ".sql"))
                 {
                     foreach (var actualItem in newFurnis)
@@ -194,17 +189,16 @@ namespace GerarMobis
                         if (!tryGetInfo(actualItem, out Furnis furni))
                             notExists = true;
 
-                        idOriginal++;
+                        itemIdInicial++;
                         if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `furniture` (`id`, `furniline`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`) VALUES (" + idOriginal + ", '" + furniline + "', '" + actualItem + "', '" + (!notExists ? furni.publicName : actualItem + " name") + "', 's', 1, 1, 0, '1', '0', '0', " + idOriginal + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0');");
+                            sw.WriteLine(@"INSERT INTO `furniture` (`id`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`) VALUES (" + itemIdInicial + ", '" + actualItem + "', '" + (!notExists ? furni.publicName : actualItem + " name") + "', 's', 1, 1, 0, '1', '0', '0', " + itemIdInicial + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0');");
                         else
-                            sw.WriteLine(@"INSERT INTO `items_base` VALUES ('" + idOriginal + "', '" + idOriginal + "', '" + actualItem + "', '" + (!notExists ? furni.publicName : actualItem + " name") + "', '1', '1', '0', '1', '0', '0', '0', '1', '1', '1', '1', '1', 's', 'default', '0', '0','0','0','0','0','0');");
+                            sw.WriteLine(@"INSERT INTO `items_base` VALUES (" + itemIdInicial + ", " + itemIdInicial + ", '" + actualItem + "', '" + actualItem + "', 's', 1, 1, 1.00, 1, 0, 0, 0, 1, 1, 0, 0, 1, 'default', 1, '0', '', '', 0, 0, '');");
                         notExists = false;
                     }
 
                     sw.Close();
                 }
-            }
 
             typeEmu = char.ToUpper(typeEmu[0]) + typeEmu.Substring(1);
             writeLine("[SQL] -> " + typeEmu.Replace('_', ' ') + " created!", ConsoleColor.Green);
@@ -219,7 +213,6 @@ namespace GerarMobis
             setTitle("Genereate SQL - Furnidata");
 
             if (newFurnis.Count > 0)
-            {
                 using (StreamWriter sw = File.CreateText(@"sqls/furnidata.xml"))
                 {
                     foreach (var actualItem in newFurnis)
@@ -234,11 +227,10 @@ namespace GerarMobis
                         sw.WriteLine("  <ydim>1</ydim>");
                         sw.WriteLine("  <partcolors />");
                         sw.WriteLine("  <name>" + (!notExists ? furni.publicName : actualItem + " name") + "</name>");
-                        //sw.WriteLine("  <description>" + actualItem + " desc" + "</description>");
                         sw.WriteLine("  <description>" + (!notExists ? furni.descName : actualItem + " desc") + "</description>");
                         sw.WriteLine("  <adurl />");
                         sw.WriteLine("  <offerid>" + itemIdInicial + "</offerid>");
-                        sw.WriteLine("  <buyout>0</buyout>");
+                        sw.WriteLine("  <buyout>1</buyout>");
                         sw.WriteLine("  <rentofferid>-1</rentofferid>");
                         sw.WriteLine("  <rentbuyout>0</rentbuyout>");
                         sw.WriteLine("  <bc>0</bc>");
@@ -255,31 +247,9 @@ namespace GerarMobis
                     sw.Close();
                 }
 
-                writeLine("[XML] -> Furnidata created!", ConsoleColor.Green);
-            }
+            writeLine("[XML] -> Furnidata created!", ConsoleColor.Green);
         }
-        #endregion
 
-        #region Productdata
-        private static void generateProductdata()
-        {
-            bool notExists = false;
-
-            setTitle("Genereate SQL - Furnidata");
-
-            if (newFurnis.Count > 0)
-                using (StreamWriter sw = File.CreateText(@"sqls/productdata.txt"))
-                {
-                    foreach (var actualItem in newFurnis)
-                    {
-                        if (!tryGetInfo(actualItem, out Furnis furni))
-                            notExists = true;
-
-                        sw.WriteLine("[\"" + actualItem + "", !notExists ? furni.publicName : actualItem, !notExists ? furni.descName : actualItem + " desc" + "]");
-                        notExists = true;
-                    }
-                }
-        }
         #endregion
 
         #region Add Items Text
@@ -329,7 +299,7 @@ namespace GerarMobis
             path = path.Replace(".com.br", "br").Replace(".com.tr", "tr").Replace(".", string.Empty).Replace(".de", "de");
 
             webClient.Headers.Add("User-Agent: Other");
-            webClient.DownloadFile(new Uri("https://www.habbo" + path + "/gamedata/productdata/68a94a97ea90183f76a6950e5b360211450aa904"), Environment.CurrentDirectory + "/extras/productdata_" + path + ".txt");
+            webClient.DownloadFile(new Uri("https://www.habbo." + path + "/gamedata/productdata/68a94a97ea90183f76a6950e5b360211450aa904"), Environment.CurrentDirectory + "/extras/productdata_" + path + ".txt");
             writeLine("Download completed!\n", ConsoleColor.Green);
             actualProductdata = path;
         }
@@ -339,13 +309,11 @@ namespace GerarMobis
         private static bool existsProductdata()
         {
             foreach (var language in languages)
-            {
                 if (File.Exists("extras/productdata_" + language + ".txt"))
                 {
                     actualProductdata = language;
                     return true;
                 }
-            }
 
             return false;
         }
