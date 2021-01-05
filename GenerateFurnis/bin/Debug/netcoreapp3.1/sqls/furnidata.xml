@@ -1,0 +1,42 @@
+<furnitype id="900375" classname="darkmodern_c20_bed">
+  <revision>0</revision>
+  <defaultdir>0</defaultdir>
+  <xdim>1</xdim>
+  <ydim>1</ydim>
+  <partcolors />
+  <name>Chill Modern Bed</name>
+  <description>darkmodern_c20_bed desc</description>
+  <adurl />
+  <offerid>900375</offerid>
+  <buyout>1</buyout>
+  <rentofferid>-1</rentofferid>
+  <rentbuyout>0</rentbuyout>
+  <bc>0</bc>
+  <excludeddynamic>0</excludeddynamic>
+  <customparams>0</customparams>
+  <specialtype>1</specialtype>
+  <canstandon>0</canstandon>
+  <cansiton>0</cansiton>
+  <canlayon>0</canlayon>
+</furnitype>
+<furnitype id="900376" classname="darkmodern_c20_bunnylight">
+  <revision>0</revision>
+  <defaultdir>0</defaultdir>
+  <xdim>1</xdim>
+  <ydim>1</ydim>
+  <partcolors />
+  <name>Bunny Light</name>
+  <description>darkmodern_c20_bunnylight desc</description>
+  <adurl />
+  <offerid>900376</offerid>
+  <buyout>1</buyout>
+  <rentofferid>-1</rentofferid>
+  <rentbuyout>0</rentbuyout>
+  <bc>0</bc>
+  <excludeddynamic>0</excludeddynamic>
+  <customparams>0</customparams>
+  <specialtype>1</specialtype>
+  <canstandon>0</canstandon>
+  <cansiton>0</cansiton>
+  <canlayon>0</canlayon>
+</furnitype>
