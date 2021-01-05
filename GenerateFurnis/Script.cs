@@ -49,6 +49,8 @@ namespace GerarMobis
 
                 Thread.Sleep(250);
 
+                CreateFolders();
+
                 if (files.Length == 0)
                 {
                     writeLine("Directory <SWFs> is empty. Please insert some files (.swf) to start.", ConsoleColor.Red);
@@ -56,7 +58,7 @@ namespace GerarMobis
                     return;
                 }
 
-                deleteFiles();
+                deleteFilesSQL();
 
                 if (!File.Exists("extras/productdata_" + actualProductdata + ".txt") && !existsProductdata())
                 {
@@ -294,14 +296,21 @@ namespace GerarMobis
         private static void downloadProductdata(string path)
         {
             setTitle("Download productdata...");
-            WebClient webClient = new WebClient();
+            try
+            {
+                WebClient webClient = new WebClient();
 
-            path = path.Replace(".com.br", "br").Replace(".com.tr", "tr").Replace(".", string.Empty).Replace(".de", "de");
+                path = path.Replace(".com.br", "br").Replace(".com.tr", "tr").Replace(".", string.Empty).Replace(".de", "de");
 
-            webClient.Headers.Add("User-Agent: Other");
-            webClient.DownloadFile(new Uri("https://www.habbo." + path + "/gamedata/productdata/68a94a97ea90183f76a6950e5b360211450aa904"), Environment.CurrentDirectory + "/extras/productdata_" + path + ".txt");
-            writeLine("Download completed!\n", ConsoleColor.Green);
-            actualProductdata = path;
+                webClient.Headers.Add("User-Agent: Other");
+                webClient.DownloadFile(new Uri("https://www.habbo." + path + "/gamedata/productdata/68a94a97ea90183f76a6950e5b360211450aa904"), Environment.CurrentDirectory + "/extras/productdata_" + path + ".txt");
+                writeLine("Download completed!\n", ConsoleColor.Green);
+                actualProductdata = path;
+            }
+            catch (WebException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
         #endregion
 
@@ -375,29 +384,56 @@ namespace GerarMobis
         #endregion
 
         #region Delete files
-        private static void deleteFiles()
+        private static void deleteFilesSQL()
         {
             setTitle("Delete files (Folder SQLs)");
-            string[] files = Directory.GetFiles(@"sqls\");
-
-            string name = "";
-
-            if (files.Length > 0)
+            try
             {
-                foreach (var file in files)
-                {
-                    try
+                string[] files = Directory.GetFiles(@"sqls\");
+
+                string name = "";
+
+                if (files.Length > 0)
+                    foreach (var file in files)
                     {
-                        name = file.Replace(@"sqls\", "");
-                        if (File.Exists(Environment.CurrentDirectory + "/sqls/" + name))
-                            File.Delete(Environment.CurrentDirectory + "/sqls/" + name);
+                        try
+                        {
+                            name = file.Replace(@"sqls\", "");
+                            if (File.Exists(Environment.CurrentDirectory + "/sqls/" + name))
+                                File.Delete(Environment.CurrentDirectory + "/sqls/" + name);
+                        }
+                        catch (Exception e)
+                        {
+                            saveLogs(Environment.CurrentDirectory + PATH_FILE_ERRORS, e.ToString());
+                        }
                     }
-                    catch (Exception e)
-                    {
-                        saveLogs(Environment.CurrentDirectory + PATH_FILE_ERRORS, e.ToString());
-                    }
-                }
             }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Console.WriteLine(ex);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+        #endregion
+
+        #region Create folders
+        private static void CreateFolders()
+        {
+            if (!Directory.Exists("errors"))
+                Directory.CreateDirectory("errors");
+            if (!Directory.Exists("sqls"))
+                Directory.CreateDirectory("sqls");
+            if (!Directory.Exists("extras"))
+                Directory.CreateDirectory("extras");
+            if (!Directory.Exists("swfs"))
+                Directory.CreateDirectory("swfs");
         }
         #endregion
 
