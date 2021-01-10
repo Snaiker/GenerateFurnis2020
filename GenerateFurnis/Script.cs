@@ -184,23 +184,25 @@ namespace GerarMobis
             setTitle("Generate SQL - " + typeEmu);
 
             if (newFurnis.Count > 0)
-                using (StreamWriter sw = File.CreateText(@"sqls/" + typeEmu + ".sql"))
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+
+                foreach (var actualItem in newFurnis)
                 {
-                    foreach (var actualItem in newFurnis)
-                    {
-                        if (!tryGetInfo(actualItem, out Furnis furni))
-                            notExists = true;
+                    if (!tryGetInfo(actualItem, out Furnis furni))
+                        notExists = true;
 
-                        itemIdInicial++;
-                        if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `furniture` (`id`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`) VALUES (" + itemIdInicial + ", '" + actualItem + "', '" + (!notExists ? furni.publicName : actualItem + " name") + "', 's', 1, 1, 0, '1', '0', '0', " + itemIdInicial + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0');");
-                        else
-                            sw.WriteLine(@"INSERT INTO `items_base` VALUES (" + itemIdInicial + ", " + itemIdInicial + ", '" + actualItem + "', '" + actualItem + "', 's', 1, 1, 1.00, 1, 0, 0, 0, 1, 1, 0, 0, 1, 'default', 1, '0', '', '', 0, 0, '');");
-                        notExists = false;
-                    }
-
-                    sw.Close();
+                    itemIdInicial++;
+                    if (isPlus)
+                        stringBuilder.AppendLine(@"INSERT INTO `furniture` (`id`, `item_name`, `public_name`, `type`, `width`, `length`, `stack_height`, `can_stack`, `can_sit`, `is_walkable`, `sprite_id`, `allow_recycle`, `allow_trade`, `allow_marketplace_sell`, `allow_gift`, `allow_inventory_stack`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `height_adjustable`, `effect_id`, `wired_id`, `is_rare`, `clothing_id`, `extra_rot`) VALUES (" + itemIdInicial + ", '" + actualItem + "', '" + (!notExists ? furni.publicName : actualItem + " name") + "', 's', 1, 1, 0, '1', '0', '0', " + itemIdInicial + ", '1', '1', '1', '1', '1', 'default', 1, '0', '0', 0, 0, '0', 0, '0');");
+                    else
+                        stringBuilder.AppendLine(@"INSERT INTO `items_base` (`id`, `sprite_id`, `item_name`, `public_name`, `width`, `length`, `stack_height`, `allow_stack`, `allow_sit`, `allow_lay`, `allow_walk`, `allow_gift`, `allow_trade`, `allow_recycle`, `allow_marketplace_sell`, `allow_inventory_stack`, `type`, `interaction_type`, `interaction_modes_count`, `vending_ids`, `multiheight`, `customparams`, `effect_id_male`, `effect_id_female`, `clothing_on_walk`) VALUES (" + itemIdInicial + ", " + itemIdInicial + ", '" + actualItem + "', '" + actualItem + "', 1, 1, 0.0, '1', '0', '0', '0', '1', '1', '1', '1', '1', 's', 'default', 1, '', '', '', 0, 0, '');");
+                    notExists = false;
                 }
+
+                using (StreamWriter sw = File.CreateText(@"sqls/" + typeEmu + ".sql"))
+                    sw.WriteLine(stringBuilder.ToString());
+            }
 
             typeEmu = char.ToUpper(typeEmu[0]) + typeEmu.Substring(1);
             writeLine("[SQL] -> " + typeEmu.Replace('_', ' ') + " created!", ConsoleColor.Green);
