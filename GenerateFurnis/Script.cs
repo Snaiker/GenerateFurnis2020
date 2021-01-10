@@ -27,7 +27,7 @@ namespace GerarMobis
             {
                 #region Languages productdata
                 languages.Add("com");
-                languages.Add("br");
+                languages.Add("com.br");
                 languages.Add("tr");
                 languages.Add("es");
                 languages.Add("nl");
@@ -65,7 +65,7 @@ namespace GerarMobis
                     Console.WriteLine("Type production? (com / br / tr / es / nl / fi / de)");
                     string typeProduction = Convert.ToString(Console.ReadLine());
 
-                    string newPathProduct = typeProduction.Equals("com") ? ".com" : typeProduction.Equals("br") ? ".com.br" : typeProduction.Equals("tr") ? ".com.tr" : typeProduction.Equals("es") ? ".es" : typeProduction.Equals("nl") ? ".nl" : typeProduction.Equals("fi") ? ".fi" : typeProduction.Equals("de") ? ".de" : ".com";
+                    string newPathProduct = typeProduction.Equals("com") ? ".com" : typeProduction.Equals("br") ? ".br" : typeProduction.Equals("tr") ? ".com.tr" : typeProduction.Equals("es") ? ".es" : typeProduction.Equals("nl") ? ".nl" : typeProduction.Equals("fi") ? ".fi" : typeProduction.Equals("de") ? ".de" : ".com";
 
                     writeLine("Oops, missing the file productdata.txt! Starting download...\n", ConsoleColor.Red);
                     downloadProductdata(newPathProduct);
@@ -300,8 +300,7 @@ namespace GerarMobis
             {
                 WebClient webClient = new WebClient();
 
-                path = path.Replace(".com.br", "br").Replace(".com.tr", "tr").Replace(".", string.Empty).Replace(".de", "de");
-
+                path = path.Replace(".com.tr", "tr").Replace(".", string.Empty).Replace(".de", "de").Replace("br", "com.br");
                 webClient.Headers.Add("User-Agent: Other");
                 webClient.DownloadFile(new Uri("https://www.habbo." + path + "/gamedata/productdata/68a94a97ea90183f76a6950e5b360211450aa904"), Environment.CurrentDirectory + "/extras/productdata_" + path + ".txt");
                 writeLine("Download completed!\n", ConsoleColor.Green);
