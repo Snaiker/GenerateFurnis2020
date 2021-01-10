@@ -23,6 +23,8 @@ namespace GerarMobis
 
         public static void initialize()
         {
+            CreateFolders();
+
             try
             {
                 #region Languages productdata
@@ -48,8 +50,6 @@ namespace GerarMobis
                 writeLine("Welcome! Bem-vind@! Bienvenid@! :)\n", ConsoleColor.White);
 
                 Thread.Sleep(250);
-
-                CreateFolders();
 
                 if (files.Length == 0)
                 {
@@ -133,12 +133,16 @@ namespace GerarMobis
         private static void generatePage(int pageId, int parentId, string pageName, bool isPlus)
         {
             setTitle("Generate SQL - Catalog Pages");
+            StringBuilder stringBuilder = new StringBuilder();
+
+            if (isPlus)
+                stringBuilder.AppendLine(@"INSERT INTO `catalog_pages` (`id`,`parent_id`, `caption`, `icon_image`, `min_rank`, `order_num`) VALUES (" + pageId + ", " + parentId + ", '" + pageName + "' , 13, 1, '0');");
+            else
+                stringBuilder.AppendLine(@"INSERT INTO `catalog_pages` (`id`, `parent_id`, `caption_save`, `caption`, `page_layout`, `icon_color`, `icon_image`, `min_rank`, `order_num`, `visible`, `enabled`, `club_only`, `vip_only`, `page_headline`, `page_teaser`, `page_special`, `page_text1`, `page_text2`, `page_text_details`, `page_text_teaser`, `room_id`, `includes`) VALUES (" + pageId + ", " + parentId + ", '" + pageName.ToLower().Replace(' ', '_') + "', '" + pageName + "', 'default_3x3', 1, 1, 1, 1, '1', '1', '0', '0', '', '', '', '', '', '', '', 0, '');");
+
             using (StreamWriter sw = File.CreateText(@"sqls/catalog_pages.sql"))
             {
-                if (isPlus)
-                    sw.WriteLine(@"INSERT INTO `catalog_pages` (`id`,`parent_id`, `caption`, `icon_image`, `min_rank`, `order_num`) VALUES (" + pageId + ", " + parentId + ", '" + pageName + "' , 13, 1, '0');");
-                else
-                    sw.WriteLine(@"INSERT INTO `catalog_pages` (`id`, `parent_id`, `caption_save`, `caption`, `page_layout`, `icon_color`, `icon_image`, `min_rank`, `order_num`, `visible`, `enabled`, `club_only`, `vip_only`, `page_headline`, `page_teaser`, `page_special`, `page_text1`, `page_text2`, `page_text_details`, `page_text_teaser`, `room_id`, `includes`) VALUES (" + pageId + ", " + parentId + ", '" + pageName.ToLower().Replace(' ', '_') + "', '" + pageName + "', 'default_3x3', 1, 1, 1, 1, '1', '1', '0', '0', '', '', '', '', '', '', '', 0, '');");
+                sw.Write(stringBuilder.ToString());
                 sw.Close();
             }
 
@@ -153,23 +157,28 @@ namespace GerarMobis
             bool notExists = false;
 
             if (newFurnis.Count > 0)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+
+                foreach (var actualItem in newFurnis)
+                {
+                    if (!tryGetInfo(actualItem, out Furnis furni))
+                        notExists = true;
+
+                    itemIdInicial++;
+                    if (isPlus)
+                        stringBuilder.AppendLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds, offer_id) VALUES (" + itemIdInicial + ", " + pageId + ", " + itemIdInicial + ", '" + (!notExists ? furni.publicName : actualItem + " name") + "', 3, 0, " + itemIdInicial + ");");
+                    else
+                        stringBuilder.AppendLine(@"INSERT INTO `catalog_items` (`id`, `item_ids`, `page_id`, `catalog_name`, `cost_credits`, `cost_points`, `points_type`, `amount`, `limited_stack`, `limited_sells`, `order_number`, `offer_id`, `song_id`, `extradata`, `have_offer`, `club_only`) VALUES (" + itemIdInicial + ", '" + itemIdInicial + "', " + pageId + ", '" + actualItem + "', 3, 0, 0, 1, 0, 0, 1, " + itemIdInicial + ", 0, '', '1', '0');");
+                    notExists = false;
+                }
+
                 using (StreamWriter sw = File.CreateText(@"sqls/catalog_items.sql"))
                 {
-                    foreach (var actualItem in newFurnis)
-                    {
-                        if (!tryGetInfo(actualItem, out Furnis furni))
-                            notExists = true;
-
-                        itemIdInicial++;
-                        if (isPlus)
-                            sw.WriteLine(@"INSERT INTO `catalog_items` (id, page_id, item_id, catalog_name, cost_credits, cost_diamonds, offer_id) VALUES (" + itemIdInicial + ", " + pageId + ", " + itemIdInicial + ", '" + (!notExists ? furni.publicName : actualItem + " name") + "', 3, 0, " + itemIdInicial + ");");
-                        else
-                            sw.WriteLine(@"INSERT INTO `catalog_items` (`id`, `item_ids`, `page_id`, `catalog_name`, `cost_credits`, `cost_points`, `points_type`, `amount`, `limited_stack`, `limited_sells`, `order_number`, `offer_id`, `song_id`, `extradata`, `have_offer`, `club_only`) VALUES (" + itemIdInicial + ", '" + itemIdInicial + "', " + pageId + ", '" + actualItem + "', 3, 0, 0, 1, 0, 0, 1, " + itemIdInicial + ", 0, '', '1', '0');");
-                        notExists = false;
-                    }
-
+                    sw.Write(stringBuilder.ToString());
                     sw.Close();
                 }
+            }
 
             writeLine("[SQL] -> Catalog Items created!", ConsoleColor.Green);
         }
@@ -201,7 +210,10 @@ namespace GerarMobis
                 }
 
                 using (StreamWriter sw = File.CreateText(@"sqls/" + typeEmu + ".sql"))
-                    sw.WriteLine(stringBuilder.ToString());
+                {
+                    sw.Write(stringBuilder.ToString());
+                    sw.Close();
+                }
             }
 
             typeEmu = char.ToUpper(typeEmu[0]) + typeEmu.Substring(1);
