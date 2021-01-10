@@ -224,44 +224,49 @@ namespace GerarMobis
         #region Furnidata
         private static void generateFurnidata(int itemIdInicial)
         {
-            bool notExists = false;
-
             setTitle("Genereate SQL - Furnidata");
 
             if (newFurnis.Count > 0)
+            {
+                bool notExists = false;
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                foreach (var actualItem in newFurnis)
+                {
+                    if (!tryGetInfo(actualItem, out Furnis furni))
+                        notExists = true;
+
+                    stringBuilder.AppendLine("<furnitype id=\"" + (++itemIdInicial) + "\" classname=\"" + actualItem + "\">");
+                    stringBuilder.AppendLine("  <revision>0</revision>");
+                    stringBuilder.AppendLine("  <defaultdir>0</defaultdir>");
+                    stringBuilder.AppendLine("  <xdim>1</xdim>");
+                    stringBuilder.AppendLine("  <ydim>1</ydim>");
+                    stringBuilder.AppendLine("  <partcolors />");
+                    stringBuilder.AppendLine("  <name>" + (!notExists ? furni.publicName : actualItem + " name") + "</name>");
+                    stringBuilder.AppendLine("  <description>" + (!notExists ? furni.descName : actualItem + " desc") + "</description>");
+                    stringBuilder.AppendLine("  <adurl />");
+                    stringBuilder.AppendLine("  <offerid>" + itemIdInicial + "</offerid>");
+                    stringBuilder.AppendLine("  <buyout>1</buyout>");
+                    stringBuilder.AppendLine("  <rentofferid>-1</rentofferid>");
+                    stringBuilder.AppendLine("  <rentbuyout>0</rentbuyout>");
+                    stringBuilder.AppendLine("  <bc>0</bc>");
+                    stringBuilder.AppendLine("  <excludeddynamic>0</excludeddynamic>");
+                    stringBuilder.AppendLine("  <customparams>0</customparams>");
+                    stringBuilder.AppendLine("  <specialtype>1</specialtype>");
+                    stringBuilder.AppendLine("  <canstandon>0</canstandon>");
+                    stringBuilder.AppendLine("  <cansiton>0</cansiton>");
+                    stringBuilder.AppendLine("  <canlayon>0</canlayon>");
+                    stringBuilder.AppendLine("</furnitype>");
+                    notExists = false;
+                }
+
                 using (StreamWriter sw = File.CreateText(@"sqls/furnidata.xml"))
                 {
-                    foreach (var actualItem in newFurnis)
-                    {
-                        if (!tryGetInfo(actualItem, out Furnis furni))
-                            notExists = true;
-
-                        sw.WriteLine("<furnitype id=\"" + (++itemIdInicial) + "\" classname=\"" + actualItem + "\">");
-                        sw.WriteLine("  <revision>0</revision>");
-                        sw.WriteLine("  <defaultdir>0</defaultdir>");
-                        sw.WriteLine("  <xdim>1</xdim>");
-                        sw.WriteLine("  <ydim>1</ydim>");
-                        sw.WriteLine("  <partcolors />");
-                        sw.WriteLine("  <name>" + (!notExists ? furni.publicName : actualItem + " name") + "</name>");
-                        sw.WriteLine("  <description>" + (!notExists ? furni.descName : actualItem + " desc") + "</description>");
-                        sw.WriteLine("  <adurl />");
-                        sw.WriteLine("  <offerid>" + itemIdInicial + "</offerid>");
-                        sw.WriteLine("  <buyout>1</buyout>");
-                        sw.WriteLine("  <rentofferid>-1</rentofferid>");
-                        sw.WriteLine("  <rentbuyout>0</rentbuyout>");
-                        sw.WriteLine("  <bc>0</bc>");
-                        sw.WriteLine("  <excludeddynamic>0</excludeddynamic>");
-                        sw.WriteLine("  <customparams>0</customparams>");
-                        sw.WriteLine("  <specialtype>1</specialtype>");
-                        sw.WriteLine("  <canstandon>0</canstandon>");
-                        sw.WriteLine("  <cansiton>0</cansiton>");
-                        sw.WriteLine("  <canlayon>0</canlayon>");
-                        sw.WriteLine("</furnitype>");
-                        notExists = false;
-                    }
-
+                    sw.Write(stringBuilder.ToString());
                     sw.Close();
                 }
+            }
 
             writeLine("[XML] -> Furnidata created!", ConsoleColor.Green);
         }
